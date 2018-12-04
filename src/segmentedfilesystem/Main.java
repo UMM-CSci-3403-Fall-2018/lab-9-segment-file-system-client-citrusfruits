@@ -24,13 +24,14 @@ public class Main {
         int total = 3;
         int count = 0;
 
-        while (true) {
+        while (packets != 3 || count != total) {
             count++;
             DatagramPacket received = new DatagramPacket(buffer, buffer.length);
             socket.receive(received);
             byte[] receivedArray = new byte[received.getLength()];
 
             System.arraycopy(received.getData(), 0, receivedArray, 0, receivedArray.length);
+
 
             byte status = receivedArray[0];
             if (status % 2 == 0) {
@@ -69,7 +70,7 @@ public class Main {
         socket.close();
     }
 
-    public static int assignNumber(byte a, byte b) {
+    private static int assignNumber(byte a, byte b) {
         int num;
         int newPacket;
         int newerPacket;
@@ -89,10 +90,9 @@ public class Main {
         return num;
     }
 
-    public static int getSize(ArrayList<byte[]> numPacks, byte fileID) {
+    private static int getSize(ArrayList<byte[]> numPacks, byte fileID) {
         int initial = -1;
-        for (int i = 0; i < numPacks.size(); i++) {
-            byte[] array = numPacks.get(i);
+        for (byte[] array : numPacks) {
             if (array[1] == fileID) {
                 initial = assignNumber(array[2], array[3]) + 1;
             }
@@ -100,40 +100,38 @@ public class Main {
         return initial;
     }
 
-    public static ArrayList<byte[]> genList(ArrayList<byte[]> data, int fileSize, byte fileID) {
-        ArrayList<byte[]> l = new ArrayList<byte[]>(fileSize);
+    private static ArrayList<byte[]> genList(ArrayList<byte[]> data, int fileSize, byte fileID) {
+        ArrayList<byte[]> l = new ArrayList<>(fileSize);
         for (int i = 0; i < fileSize; i++) {
             l.add(null);
         }
 
-        for (int i = 0; i < data.size(); i++) {
-            byte dataID = data.get(i)[1];
-            int num = assignNumber(data.get(i)[2], data.get(i)[3]);
+        for (byte[] aData : data) {
+            byte dataID = aData[1];
+            int num = assignNumber(aData[2], aData[3]);
 
             if (dataID == fileID) {
-                l.set(num, data.get(i));
+                l.set(num, aData);
             }
         }
         return l;
     }
 
-    public static String getName(ArrayList<byte[]> header, int fileNum) {
-        String name = null;
+    private static String getName(ArrayList<byte[]> header, int fileNum) {
+        String name;
         byte[] byteName = new byte[header.get(fileNum).length - 2];
 
-        for (int i = 0; i < byteName.length; i++) {
-            byteName[i] = header.get(fileNum)[i + 2];
-        }
+        if (byteName.length >= 0) System.arraycopy(header.get(fileNum), 2, byteName, 0, byteName.length);
         name = new String(byteName);
         return name;
     }
 
-    public static void write(ArrayList<byte[]> list, String fileName) throws IOException {
+    private static void write(ArrayList<byte[]> list, String fileName) throws IOException {
         FileOutputStream file = new FileOutputStream(fileName);
 
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 4; j < list.get(i).length; j++) {
-                file.write(list.get(i)[j]);
+        for (byte[] aList : list) {
+            for (int j = 4; j < aList.length; j++) {
+                file.write(aList[j]);
             }
         }
         file.close();
