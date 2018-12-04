@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
-public class Main {
+public class segmented {
 
     public static void main(String[] args) throws IOException {
         int port = 6014;
@@ -70,7 +70,7 @@ public class Main {
         socket.close();
     }
 
-    private static int assignNumber(byte a, byte b) {
+    public static int assignNumber(byte a, byte b) {
         int num;
         int newPacket;
         int newerPacket;
@@ -90,7 +90,7 @@ public class Main {
         return num;
     }
 
-    private static int getSize(ArrayList<byte[]> numPacks, byte fileID) {
+    public static int getSize(ArrayList<byte[]> numPacks, byte fileID) {
         int initial = -1;
         for (byte[] array : numPacks) {
             if (array[1] == fileID) {
@@ -100,7 +100,7 @@ public class Main {
         return initial;
     }
 
-    private static ArrayList<byte[]> genList(ArrayList<byte[]> data, int fileSize, byte fileID) {
+    public static ArrayList<byte[]> genList(ArrayList<byte[]> data, int fileSize, byte fileID) {
         ArrayList<byte[]> l = new ArrayList<>(fileSize);
         for (int i = 0; i < fileSize; i++) {
             l.add(null);
@@ -117,16 +117,16 @@ public class Main {
         return l;
     }
 
-    private static String getName(ArrayList<byte[]> header, int fileNum) {
+    public static String getName(ArrayList<byte[]> header, int fileNum) {
         String name;
         byte[] byteName = new byte[header.get(fileNum).length - 2];
 
-        if (byteName.length >= 0) System.arraycopy(header.get(fileNum), 2, byteName, 0, byteName.length);
+        System.arraycopy(header.get(fileNum), 2, byteName, 0, byteName.length);
         name = new String(byteName);
         return name;
     }
 
-    private static void write(ArrayList<byte[]> list, String fileName) throws IOException {
+    public static void write(ArrayList<byte[]> list, String fileName) throws IOException {
         FileOutputStream file = new FileOutputStream(fileName);
 
         for (byte[] aList : list) {
