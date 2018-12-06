@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
-public class segmented {
+public class Segmented {
 
     public static void main(String[] args) throws IOException {
         int port = 6014;
@@ -31,8 +31,8 @@ public class segmented {
 
             System.arraycopy(received.getData(), 0, receivedArray, 0, receivedArray.length);
 
-
             byte status = receivedArray[0];
+
             if (status % 2 == 0) {
                 header.add(receivedArray);
             } else if (status % 4 == 3) {
@@ -58,7 +58,6 @@ public class segmented {
         ArrayList<byte[]> fileTwo = Functions.genList(data, fileTwoSize, fileTwoID);
         ArrayList<byte[]> fileThree = Functions.genList(data, fileThreeSize, fileThreeID);
 
-
         String fileOneName = Functions.getName(header, 0);
         String fileTwoName = Functions.getName(header, 1);
         String fileThreeName = Functions.getName(header, 2);
@@ -66,6 +65,7 @@ public class segmented {
         Functions.write(fileOne, fileOneName);
         Functions.write(fileTwo, fileTwoName);
         Functions.write(fileThree, fileThreeName);
+
         socket.close();
     }
 }

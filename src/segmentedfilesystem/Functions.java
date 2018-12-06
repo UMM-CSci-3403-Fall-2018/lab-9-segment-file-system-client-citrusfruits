@@ -22,21 +22,25 @@ class Functions {
             newerPacket = b;
         }
         num = 256 * newPacket + newerPacket;
+
         return num;
     }
 
     static int getSize(ArrayList<byte[]> numPacks, byte fileID) {
         int initial = -1;
+
         for (byte[] array : numPacks) {
             if (array[1] == fileID) {
                 initial = assignNumber(array[2], array[3]) + 1;
             }
         }
+
         return initial;
     }
 
     static ArrayList<byte[]> genList(ArrayList<byte[]> data, int fileSize, byte fileID) {
         ArrayList<byte[]> l = new ArrayList<>(fileSize);
+
         for (int i = 0; i < fileSize; i++) {
             l.add(null);
         }
@@ -49,13 +53,13 @@ class Functions {
                 l.set(num, aData);
             }
         }
+
         return l;
     }
 
     static String getName(ArrayList<byte[]> header, int fileNum) {
         String name;
         byte[] byteName = new byte[header.get(fileNum).length - 2];
-
         System.arraycopy(header.get(fileNum), 2, byteName, 0, byteName.length);
         name = new String(byteName);
         return name;
@@ -69,6 +73,7 @@ class Functions {
                 file.write(aList[j]);
             }
         }
+
         file.close();
     }
 }
